@@ -73,6 +73,13 @@
   if (f.getAttribute('src').indexOf('script.google.com') === -1) {
     document.getElementById('fallback').style.display = 'flex';
   }
+  // the app names the tab ("Workspace: ..."); only the Apps Script frame may
+  window.addEventListener('message', function (e) {
+    var h = ''; try { h = new URL(e.origin).hostname; } catch (x) { return; }
+    if (!/\.googleusercontent\.com$/.test(h)) return;
+    var t = e.data && e.data.pabloTitle;
+    if (typeof t === 'string' && t) document.title = t.slice(0, 80);
+  });
 </script>
 
 </body>
