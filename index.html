@@ -4,6 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>
+  /* iPhone, iPad and Safari block the Google sign-in cookie inside a frame
+     from another site, so the embedded app answers 401 there. Those browsers
+     open the app directly instead; tablets ask it for the desktop layout. */
+  (function () {
+    var ua = navigator.userAgent;
+    var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var safari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(ua);
+    if (!ios && !safari) return;
+    var tablet = Math.min(screen.width, screen.height) >= 600 && (ios || navigator.maxTouchPoints > 1);
+    location.replace('https://script.google.com/macros/s/AKfycbwsMdziPYCqAVLYF6LFrjuO7Ywvrt6gF1vfN-x9Ty12zz8HyZJJgyMssJTmvcVIIjYj/exec' + (tablet ? '?fit=desk' : ''));
+  })();
+</script>
+<script>
   /* Tablets and unfolded foldables get the desktop layout, shrunk to fit,
      never the narrow responsive one: the page is laid out 1280px wide and the
      browser scales it down to the screen. Phones (short side under 600px)
