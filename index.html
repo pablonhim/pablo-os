@@ -3,6 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  /* Tablets and unfolded foldables get the desktop layout, shrunk to fit,
+     never the narrow responsive one: the page is laid out 1280px wide and the
+     browser scales it down to the screen. Phones (short side under 600px)
+     keep the normal width for now. Desktop browsers ignore this tag. */
+  (function () {
+    var DESK = 1280, meta = document.querySelector('meta[name="viewport"]');
+    function fit() {
+      var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+      var portrait = window.matchMedia ? matchMedia('(orientation: portrait)').matches : a < b;
+      var across = portrait ? short : long;
+      meta.setAttribute('content', short >= 600 && across < DESK
+        ? 'width=' + DESK + ', viewport-fit=cover'
+        : 'width=device-width, initial-scale=1, viewport-fit=cover');
+    }
+    fit();
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 60); });
+    if (window.matchMedia) { var q = matchMedia('(orientation: portrait)'); (q.addEventListener ? q.addEventListener('change', fit) : q.addListener(fit)); }
+  })();
+</script>
 <title>Pablo OS</title>
 
 <!-- Home-screen behaviour lives here now, not in the Apps Script file, because
